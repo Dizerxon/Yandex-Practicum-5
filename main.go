@@ -142,7 +142,10 @@ func (w Walking) Calories() float64 {
 	// вставьте ваш код ниже
 	avSpeed := w.meanSpeed()
 	speed := avSpeed * KmHInMsec
-	mHeight :=  w.Height * CmInM
+	mHeight :=  w.Height / CmInM
+	if mHeight == 0{
+		return 0
+	}
 	res := ((CaloriesWeightMultiplier * w.Weight + (math.Pow(speed, 2)/mHeight)*CaloriesSpeedHeightMultiplier * w.Weight) * w.Duration.Hours() * MinInHours)
 	return res 
 }
@@ -194,7 +197,13 @@ func (s Swimming) Calories() float64 {
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	return s.Training.TrainingInfo()
+	return InfoMessage{
+		TrainingType: s.TrainingType,
+		Duration:     s.Duration,
+		Distance:     s.distance(),
+		Speed:        s.meanSpeed(),
+		Calories:     s.Calories(),
+	}
 }
 
 // ReadData возвращает информацию о проведенной тренировке.
